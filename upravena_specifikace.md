@@ -1,0 +1,71 @@
+Pokud je požadováno přemístnění materiálu ze zdrojové stanice do cílové stanice, vozík si materiál vyzvedne ze zdrojové stanice do 1 minuty. 
+Pokud se vyzvednutí materiálu nestihne, materiálu se nastavuje prioritní vlastnost. 
+Každý materiál s prioritní vlastností musí být vyzvednutý vozíkem do 1 minuty od nastavení prioritního požadavku.
+Pokud se materiál s prioritní vlastností nevyzvedne, bude vyvolána výjimka X11. 
+Pokud vozík vyzvedává materiál s prioritní vlastností, přepíná se do režimu pouze-vykládá. 
+Vozík v režimu pouze-vykládá zůstává, dokud nevyloží všechen materiál s prioritní vlastností. 
+Vozík v režimu pouze-vykládá, během své jízdy může pouze vykládat další materiály v cílových stanicích. 
+Pokud není v režimu pouze-vykládá, může během své jízdy vyzvedávat i vykládat v stanicích. 
+V jedné stanici může vozík vyzvedávat nebo vyložit jeden i více materiálů. 
+Pořadí vyzvednutí materiálů nesouvisí s pořadím vytváření požadavků. 
+Vozík nevyzvedává materiál, pokud jsou všechny jeho sloty obsazené nebo by jeho vyzvednutím byla překročena maximální nosnost.
+
+
+Causes:
+time1: čas vyzvednutí materiálu pre < 1 minuta
+time2: čas vyzvednutí materiálu pre >= 1 minuta
+1: požadováno přemístnění materiálu
+2: vyzvednutí materiálu
+time3: čas vyzvednutí materiálu s prioritní vlastností pre < 1 minuta
+time4: čas vyzvednutí materiálu s prioritní vlastností pre >= 1 minuta
+3: požadováno vyzvednutí materiálu s prioritní vlastností
+4: vyzvednutí materiálu s prioritní vlastností
+5: vyložení všeho materiálu s prioritní vlastností
+6: vozík je v režimu pouze_vykládá
+7: vozík není v režimu pouze_vykládá
+8: všechny sloty vozíku jsou obsazené
+9: vozík by překročil maximální nosnost
+
+
+Effects:
+71: materiál bude vyzvednut
+72: nastavení prioritní vlastnosti materiálu
+73: bude vyvolána výjimka X11
+74: přepnutí do režimu pouze_vykládá
+75: vozík zůstává v režimu pouze_vykládá
+76: vozík v režimu pouze_vykládá vykládá materiál
+77: vozík vykládá materiál
+78: vozík vyzvedává materiál
+79: vozík nevyzvedává materiál
+
+Rules:
+//negacie vyzdvihnutia
+not2 = !2
+not4 = !4
+//negacie kapacitnych obmedzeni
+not8 = !8
+not9 = !9
+//negacie vykladania
+not5 = !5
+//aplikacia pravidel na efekty
+71 = 2 && not8 && not9 && time1
+72 =  not2 && time2
+74 =  4 && not8 && not8 && time3
+73 =  not4 && time4
+75 = not5
+76 = 6
+77 = 7
+78 = 7 && not8 && not9
+79 = 8 || 9
+
+Constraints:
+O: time1, time2
+O: time3, time4
+2 -> 1
+4 -> 3
+3 -> 1
+6 -> 4
+5 -> 6
+7 -> time1
+73 masks 74
+73 masks 71

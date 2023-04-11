@@ -1,0 +1,37 @@
+Nastavim vozík
+        cart_dev = Cart(4, 150, 0)
+        cart_dev.onmove = on_move
+
+Nastavim kontroller:
+        c = CartCtl(cart_dev, Jarvis)
+
+Nastavim cargo objekty napr:
+        helmet = CargoReq('A', 'B', 20, 'helmet')
+        helmet.onload = on_load
+        helmet.onunload = on_unload
+
+Setup plan
+        Jarvis.reset_scheduler()
+
+        Jarvis.plan(10, add_load, (c,helmet))
+        Jarvis.plan(45, add_load, (c,heart))
+        Jarvis.plan(40, add_load, (c,braceletR))
+        Jarvis.plan(25, add_load, (c,braceletL))
+
+        Jarvis.run()
+        
+Kontorla vystupu
+        self.assertTrue(cart_dev.empty())
+        self.assertEqual('unloaded', helmet.context)
+        self.assertEqual('unloaded', heart.context)
+        self.assertEqual('unloaded', braceletR.context)
+        self.assertEqual('unloaded', braceletL.context)
+
+
+
+Test1: 
+Test2:
+Test3:
+Test4:
+Test5:
+Test6:
